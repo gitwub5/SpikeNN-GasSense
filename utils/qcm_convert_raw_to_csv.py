@@ -5,8 +5,9 @@ import io
 import re
 
 # Configuration
-RAW_DATA_DIR = '/Users/gwshin/Dev/Nanolatis/qcm/raw_data'
-OUTPUT_DIR = '/Users/gwshin/Dev/Nanolatis/qcm/data/qcm/csv'
+# Note: Ensure this script is run from the project root directory.
+RAW_DATA_DIR = 'data_raw/qcm'
+OUTPUT_DIR = 'data/qcm/csv'
 
 def parse_header_metadata(lines):
     metadata = {

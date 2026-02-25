@@ -3,9 +3,9 @@ import glob
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Configuration
-DATA_DIR = '/Users/gwshin/Dev/Nanolatis/qcm/data/qcm/csv'
-PLOTS_DIR = '/Users/gwshin/Dev/Nanolatis/qcm/data/qcm/plots'
+# Configuration (Run from project root)
+DATA_DIR = 'data/qcm/csv'
+PLOTS_DIR = 'data/qcm/plots'
 
 # csv 파일 그래프로 시각화
 def visualize_file(filepath):

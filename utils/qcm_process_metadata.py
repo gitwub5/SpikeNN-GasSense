@@ -4,10 +4,10 @@ import glob
 import pandas as pd
 
 # =============================================================================
-# Configuration
+# Configuration (Run from project root)
 # =============================================================================
-RAW_DATA_DIR = '/Users/gwshin/Dev/Nanolatis/qcm/data/csv'
-OUTPUT_DIR = '/Users/gwshin/Dev/Nanolatis/qcm/data/qcm'
+RAW_DATA_DIR = 'data/qcm/csv'
+OUTPUT_DIR = 'data/qcm'
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'qcm_metadata.csv')
 
 # =============================================================================
