@@ -1,0 +1,8 @@
+/.npx-xarvis
+.venv
+.DS_Store
+/data_raw
+/data
+__pycache__
+/analyze
+/model_weights
