@@ -11,10 +11,11 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from dataset.gas_dataset import GasRegressionDataset
 from model.spiking_net import SpikingNet
+import config
 
 # --- Configuration (설정) ---
 CONFIG = {
-    "data_dir": Path("data/gas_sensor"),         # Gas 데이터가 저장될 경로
+    "data_dir": config.DM_GAS_DATA_DIR,         # Gas 데이터가 저장될 경로
     "batch_size": 32,
     "num_epochs": 10,
     "learning_rate": 1e-3,
@@ -36,7 +37,7 @@ def train_gas_model():
     dataset = GasRegressionDataset(data_dir=CONFIG["data_dir"])
     
     if len(dataset) == 0:
-        print("No data found. Please place .pt files in the data/gas_sensor directory.")
+        print("No data found. Please place .pt files in the data/dm_gas_sensor directory.")
         return
 
     # Train/Test 분할 (8:2)

@@ -3,11 +3,15 @@ import pandas as pd
 import glob
 import io
 import re
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+import config
 
 # Configuration
 # Note: Ensure this script is run from the project root directory.
-RAW_DATA_DIR = 'data_raw/qcm'
-OUTPUT_DIR = 'data/qcm/csv'
+RAW_DATA_DIR = str(config.QCM_DATA_RAW_DIR)
+OUTPUT_DIR = str(config.QCM_CSV_DIR)
 
 def parse_header_metadata(lines):
     metadata = {

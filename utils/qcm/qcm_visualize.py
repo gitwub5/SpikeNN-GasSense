@@ -2,10 +2,14 @@ import os
 import glob
 import pandas as pd
 import matplotlib.pyplot as plt
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+import config
 
 # Configuration (Run from project root)
-DATA_DIR = 'data/qcm/csv'
-PLOTS_DIR = 'data/qcm/plots'
+DATA_DIR = str(config.QCM_CSV_DIR)
+PLOTS_DIR = str(config.QCM_PLOTS_DIR)
 
 # csv 파일 그래프로 시각화
 def visualize_file(filepath):

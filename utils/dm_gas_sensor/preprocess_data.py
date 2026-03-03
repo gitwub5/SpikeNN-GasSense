@@ -1,6 +1,9 @@
 import argparse
 import os
 from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+import config
 
 import numpy as np
 import pandas as pd
@@ -74,9 +77,9 @@ def process_and_save(file_path: Path, output_dir: Path, out_filename: str):
 
 def main():
     parser = argparse.ArgumentParser(description="Preprocess Gas Sensor Dataset for Regression")
-    parser.add_argument("--data_dir", type=str, default="/Users/gwshin/Dev/Nanolatis/spike_nn/data_raw/gas_sensor",
+    parser.add_argument("--data_dir", type=str, default=str(config.DM_GAS_DATA_RAW_DIR),
                         help="Path to the directory containing raw txt files")
-    parser.add_argument("--out_dir", type=str, default="/Users/gwshin/Dev/Nanolatis/spike_nn/data/gas_sensor",
+    parser.add_argument("--out_dir", type=str, default=str(config.DM_GAS_DATA_DIR),
                         help="Path to the directory where .pt files will be saved")
     args = parser.parse_args()
 

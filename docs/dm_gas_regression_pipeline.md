@@ -20,8 +20,8 @@
 
 ```text
 spike_nn/
-├── data/gas_sensor/            <-- 변환된 PyTorch Tensor (.pt) 저장소
-├── data_raw/gas_sensor/        <-- 원본 텍스트 데이터 (.txt 파일들)
+├── data/dm_gas_sensor/            <-- 변환된 PyTorch Tensor (.pt) 저장소
+├── data_raw/dm_gas_sensor/        <-- 원본 텍스트 데이터 (.txt 파일들)
 ├── dataset/
 │   └── gas_dataset.py          <-- PyTorch DataLoader용 데이터셋 코드
 ├── model/
@@ -48,7 +48,7 @@ spike_nn/
 # 가상환경(venv)을 활성화한 상태에서 실행 (시간이 수 분 정도 소요됨)
 python utils/preprocess_gas_data.py
 ```
-*완료되면 `data/gas_sensor/` 내부에 `ethylene_CO.pt` 와 `ethylene_methane.pt` 파일이 생성됩니다.*
+*완료되면 `data/dm_gas_sensor/` 내부에 `ethylene_CO.pt` 와 `ethylene_methane.pt` 파일이 생성됩니다.*
 
 ### Step 2: 전처리 데이터 검증 (Verification)
 생성된 데이터의 차원인 `(N, 500, 16)` 입력과 `(N, 2)` 타겟 형태가 올바르게 저장되었는지 확인합니다.

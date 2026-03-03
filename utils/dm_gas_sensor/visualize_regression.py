@@ -10,10 +10,11 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from dataset.gas_dataset import GasRegressionDataset
 from model.spiking_net import SpikingNet
+import config
 
 CONFIG = {
-    "data_dir": Path("data/gas_sensor"),
-    "model_path": Path("model_weights/snn_gas_regression.pth"),
+    "data_dir": config.DM_GAS_DATA_DIR,
+    "model_path": config.DM_GAS_MODEL_WEIGHTS_DIR / "snn_gas_regression.pth",
     "batch_size": 32,
     "input_features": 16,
     "hidden_size": 128,
@@ -54,12 +55,8 @@ def evaluate_and_visualize():
     all_targets = []
     all_preds = []
     
-    print("Running Inference...")
+    print("Running Inference over the full Test Set...")
     with torch.no_grad():
-        # Let's just gather the first few batches for a clear plot (e.g., 300 samples)
-        num_samples_to_plot = 300
-        gathered = 0
-        
         for data, targets in test_loader:
             data = data.to(CONFIG["device"]).permute(1, 0, 2)
             targets = targets.to(CONFIG["device"])
@@ -72,14 +69,43 @@ def evaluate_and_visualize():
             
             all_preds.append(preds.cpu().numpy())
             all_targets.append(targets.cpu().numpy())
-            
-            gathered += data.size(1)
-            if gathered >= num_samples_to_plot:
-                break
                 
-    # Concatenate and limit to num_samples_to_plot
-    y_true = np.concatenate(all_targets, axis=0)[:num_samples_to_plot]
-    y_pred = np.concatenate(all_preds, axis=0)[:num_samples_to_plot]
+    # Concatenate all gathered arrays
+    y_true_full = np.concatenate(all_targets, axis=0)
+    y_pred_full = np.concatenate(all_preds, axis=0)
+    
+    # Calculate Regression Metrics
+    mse = np.mean((y_true_full - y_pred_full) ** 2, axis=0)
+    rmse = np.sqrt(mse)
+    mae = np.mean(np.abs(y_true_full - y_pred_full), axis=0)
+    
+    # R2 Score calculation
+    ss_res = np.sum((y_true_full - y_pred_full) ** 2, axis=0)
+    ss_tot = np.sum((y_true_full - np.mean(y_true_full, axis=0)) ** 2, axis=0)
+    # Prevent division by zero if target variance is 0
+    r2 = 1 - (ss_res / np.where(ss_tot == 0, 1, ss_tot))
+
+    print("\n" + "="*50)
+    print("📊 Regression Evaluation Metrics (Full Test Set)")
+    print("="*50)
+    
+    print("📌 Gas 1 (CO/Methane)")
+    print(f"  - MSE  : {mse[0]:.4f}")
+    print(f"  - RMSE : {rmse[0]:.4f} ppm")
+    print(f"  - MAE  : {mae[0]:.4f} ppm")
+    print(f"  - R²   : {r2[0]:.4f}")
+    
+    print("\n📌 Gas 2 (Ethylene)")
+    print(f"  - MSE  : {mse[1]:.4f}")
+    print(f"  - RMSE : {rmse[1]:.4f} ppm")
+    print(f"  - MAE  : {mae[1]:.4f} ppm")
+    print(f"  - R²   : {r2[1]:.4f}")
+    print("="*50 + "\n")
+    
+    # Limit for plotting to keep the graph readable
+    num_samples_to_plot = 300
+    y_true = y_true_full[:num_samples_to_plot]
+    y_pred = y_pred_full[:num_samples_to_plot]
     
     # Plotting
     print("Generating Regression Plot...")

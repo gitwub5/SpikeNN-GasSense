@@ -1,6 +1,9 @@
 import torch
 import argparse
 from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+import config
 
 def verify_dataset(file_path: Path):
     if not file_path.exists():
@@ -51,7 +54,7 @@ def verify_dataset(file_path: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="Verify Preprocessed Gas Sensor Data for Regression")
-    parser.add_argument("--data_dir", type=str, default="/Users/gwshin/Dev/Nanolatis/spike_nn/data/gas_sensor",
+    parser.add_argument("--data_dir", type=str, default=str(config.DM_GAS_DATA_DIR),
                         help="Path to the directory containing .pt files")
     args = parser.parse_args()
 

@@ -2,6 +2,9 @@ import torch
 from torch.utils.data import Dataset
 from pathlib import Path
 from typing import Optional, Tuple, List, Dict, Any
+import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+import config
 
 
 class GasRegressionDataset(Dataset):
@@ -26,7 +29,7 @@ class GasRegressionDataset(Dataset):
 
     def __init__(
         self,
-        data_dir: str = "data/gas_sensor",
+        data_dir: str = str(config.DM_GAS_DATA_DIR),
         files: Optional[List[str]] = None,
         split: Optional[str] = None,  # "train" | "val" | "test" if indices exist
         device: Optional[str] = None,

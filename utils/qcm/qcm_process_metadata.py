@@ -2,12 +2,16 @@ import os
 import re
 import glob
 import pandas as pd
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+import config
 
 # =============================================================================
 # Configuration (Run from project root)
 # =============================================================================
-RAW_DATA_DIR = 'data/qcm/csv'
-OUTPUT_DIR = 'data/qcm'
+RAW_DATA_DIR = str(config.QCM_CSV_DIR)
+OUTPUT_DIR = str(config.QCM_DATA_DIR)
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'qcm_metadata.csv')
 
 # =============================================================================
