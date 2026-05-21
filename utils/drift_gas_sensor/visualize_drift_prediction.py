@@ -8,6 +8,7 @@ import seaborn as sns
 import snntorch as snn
 from snntorch import surrogate
 from snntorch import functional as SF
+from snntorch import utils
 
 # Add project root to sys.path to import config and dataset
 current_dir = Path(__file__).resolve().parent
@@ -18,35 +19,35 @@ from config import DRIFT_GAS_MODEL_WEIGHTS_DIR, DRIFT_GAS_ANALYZE_DIR
 from dataset.drift_gas_dataset import get_dataloaders
 
 class GasSensorSNN(nn.Module):
+    """NPX Trainer 호환 모델 (train_drift_gas.py와 동일)."""
     def __init__(self, beta=0.95):
         super().__init__()
-        self.fc1 = nn.Linear(128, 256) 
-        self.lif1 = snn.Leaky(beta=beta, spike_grad=surrogate.fast_sigmoid()) 
-        self.fc2 = nn.Linear(256, 128)
-        self.lif2 = snn.Leaky(beta=beta, spike_grad=surrogate.fast_sigmoid())
-        self.fc3 = nn.Linear(128, 6) 
-        self.lif3 = snn.Leaky(beta=beta, spike_grad=surrogate.fast_sigmoid())
+        self.fc1 = nn.Linear(128, 256, bias=False) 
+        self.lif1 = snn.Leaky(beta=beta, spike_grad=None, init_hidden=True, reset_mechanism='subtract')
+        self.fc2 = nn.Linear(256, 128, bias=False)
+        self.lif2 = snn.Leaky(beta=beta, spike_grad=None, init_hidden=True, reset_mechanism='subtract')
+        self.fc3 = nn.Linear(128, 6, bias=False) 
+        self.lif3 = snn.Leaky(beta=beta, spike_grad=None, init_hidden=True, reset_mechanism='subtract')
 
-    def forward(self, x, num_steps):
-        mem1 = self.lif1.init_leaky()
-        mem2 = self.lif2.init_leaky()
-        mem3 = self.lif3.init_leaky()
-        
-        spk3_rec = []
-        mem3_rec = []
+    def forward(self, x):
+        cur1 = self.fc1(x)
+        spk1 = self.lif1(cur1)
+        cur2 = self.fc2(spk1)
+        spk2 = self.lif2(cur2)
+        cur3 = self.fc3(spk2)
+        spk3 = self.lif3(cur3)
+        return spk3
 
-        for step in range(num_steps):
-            cur1 = self.fc1(x) 
-            spk1, mem1 = self.lif1(cur1, mem1)
-            cur2 = self.fc2(spk1)
-            spk2, mem2 = self.lif2(cur2, mem2)
-            cur3 = self.fc3(spk2)
-            spk3, mem3 = self.lif3(cur3, mem3)
-            
-            spk3_rec.append(spk3)
-            mem3_rec.append(mem3)
 
-        return torch.stack(spk3_rec, dim=0), torch.stack(mem3_rec, dim=0)
+def forward_pass(net, data, num_steps):
+    """NPX Trainer 방식의 forward pass."""
+    spk_rec = []
+    utils.reset(net)
+    for step in range(num_steps):
+        spk_out = net(data)
+        spk_rec.append(spk_out)
+    return torch.stack(spk_rec)
+
 
 def visualize_drift_predictions():
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
@@ -62,9 +63,10 @@ def visualize_drift_predictions():
         print("Please run train/train_drift_gas.py first.")
         return
         
-    # Load Model
+    # Load Model (NPX Trainer checkpoint 형식)
     net = GasSensorSNN().to(device)
-    net.load_state_dict(torch.load(model_path, map_location=device))
+    checkpoint = torch.load(model_path, map_location=device, weights_only=False)
+    net.load_state_dict(checkpoint['npx_module'])
     net.eval()
     
     # Evaluate over all batches (Time: Batch 1 to 10)
@@ -85,7 +87,7 @@ def visualize_drift_predictions():
                 data = data.to(device)
                 targets = targets.to(device)
 
-                spk_rec, _ = net(data, num_steps)
+                spk_rec = forward_pass(net, data, num_steps)
                 
                 acc_e = SF.accuracy_rate(spk_rec, targets)
                 correct_e += acc_e * targets.size(0)
