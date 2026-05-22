@@ -1,6 +1,7 @@
 numpy==1.26.4
 torch==2.10.0
 snntorch==0.9.4
-scikit-learn==1.8.0
+scikit-learn==1.7.2
 matplotlib==3.10.8
 seaborn==0.13.2
+torchvision

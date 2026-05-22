@@ -7,19 +7,13 @@ DATA_RAW_DIR = PROJECT_ROOT / "data_raw"
 MODEL_WEIGHTS_DIR = PROJECT_ROOT / "model_weights"
 ANALYZE_DIR = PROJECT_ROOT / "analyze"
 
-# DM Gas Sensor Paths
-DM_GAS_DATA_DIR = DATA_DIR / "dm_gas_sensor"
-DM_GAS_DATA_RAW_DIR = DATA_RAW_DIR / "dm_gas_sensor"
-DM_GAS_MODEL_WEIGHTS_DIR = MODEL_WEIGHTS_DIR / "dm_gas_sensor"
-
 # Drift Gas Sensor Paths
 DRIFT_GAS_DATA_DIR = DATA_DIR / "drift_gas_sensor"
 DRIFT_GAS_DATA_RAW_DIR = DATA_RAW_DIR / "drift_gas_sensor"
 DRIFT_GAS_MODEL_WEIGHTS_DIR = MODEL_WEIGHTS_DIR / "drift_gas_sensor"
 DRIFT_GAS_ANALYZE_DIR = ANALYZE_DIR / "drift_gas_sensor"
 
-# QCM Paths
-QCM_DATA_DIR = DATA_DIR / "qcm"
-QCM_CSV_DIR = QCM_DATA_DIR / "csv"
-QCM_PLOTS_DIR = QCM_DATA_DIR / "plots"
-QCM_DATA_RAW_DIR = DATA_RAW_DIR / "qcm"
+# CIFAR-10 Paths
+CIFAR10_DATA_DIR = DATA_DIR / "cifar10"
+CIFAR10_MODEL_WEIGHTS_DIR = MODEL_WEIGHTS_DIR / "cifar10"
+CIFAR10_ANALYZE_DIR = ANALYZE_DIR / "cifar10"
